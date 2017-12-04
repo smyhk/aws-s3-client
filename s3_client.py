@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Small Amazon AWS S3 management client
+**NOT PRODUCTION READY**
+This program is not secure by any means!
 """
 import sys
 import requests
@@ -9,8 +11,11 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 import mimetypes
 
+# TODO: convert to classes
+# TODO: load auth info from file or database
+# TODO: add bucket listing
 access_id = ""
-access_key = "d"
+access_key = ""
 region = "us-west-2"
 endpoint = "s3-{}.amazonaws.com".format(region)
 auth = aws4auth.AWS4Auth(access_id, access_key, region, "s3")
