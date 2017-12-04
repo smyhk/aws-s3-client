@@ -9,8 +9,8 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 import mimetypes
 
-access_id = "AKIAIDAVD7VXMVUCFA4A"
-access_key = "udkTRFqc9IfGDWW26bJVrnCgP/hZn/a5hgfSygna"
+access_id = ""
+access_key = "d"
 region = "us-west-2"
 endpoint = "s3-{}.amazonaws.com".format(region)
 auth = aws4auth.AWS4Auth(access_id, access_key, region, "s3")
@@ -34,7 +34,7 @@ def create_bucket(bucket):
     if r.ok:
         print("Created bucket {} OK".format(bucket))
     else:
-        xml_pretty_print(r.text)
+        handle_errors(r)
 
 
 def upload_file(bucket, s3_name, local_path, acl="private"):
@@ -50,7 +50,7 @@ def upload_file(bucket, s3_name, local_path, acl="private"):
     if r.ok:
         print("Uploaded {} OK".format(local_path))
     else:
-        xml_pretty_print(r.text)
+        handle_errors(r)
 
 
 def download_file(bucket, s3_name, local_path):
@@ -60,10 +60,17 @@ def download_file(bucket, s3_name, local_path):
         open(local_path, "wb").write(r.content)
         print("Downloaded {} OK".format(s3_name))
     else:
-        xml_pretty_print(r.text)
+        handle_errors(r)
 
 
 def handle_errors(response):
+    output = "Status code: {}\n".format(response.status_code)
+    root = ET.fromstring(response.text)
+    code = root.find("Code").text
+    output += "Error code: {}\n".format(code)
+    message = root.find("Message").text
+    output += "Message: {}\n".format(message)
+    print(output)
 
 
 if __name__ == '__main__':
